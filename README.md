@@ -1,1 +1,0 @@
-# cowin-tracker
