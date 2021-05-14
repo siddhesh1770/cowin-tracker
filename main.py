@@ -17,7 +17,7 @@ print("Welcome to Seventeen Seventy CO-WIN Vaccine Tracker")
 pincode = str(input("Please Enter Your Pincode - "))
 list3.append(int(input("Enter Age Limit 18 OR 45 - ")))
 sec = float(input("Please enter time Interval in seconds (3 is Recommended) But if slot is about to open you can "
-                  "enter 0.5 OR 1 also - "))
+                  "also enter 0.5 OR 1 also - "))
 findByPinParams = {"pincode": pincode, "date": dateTom}
 chromeWindow = gw.getWindowsWithTitle('Co-WIN Application - Google Chrome')[0]
 base_urlFindByPin = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin"
