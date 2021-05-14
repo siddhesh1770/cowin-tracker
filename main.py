@@ -9,13 +9,16 @@ import datetime
 import requests
 import pygetwindow as gw
 
+list1 = []
+list2 = []
+list3 = []
 dateTom_base = datetime.date.today() + datetime.timedelta(days=1)
 dateTom = dateTom_base.strftime("%d-%m-%Y")
 print("Welcome to Seventeen Seventy CO-WIN Vaccine Tracker")
 pincode = str(input("Please Enter Your Pincode - "))
+list3.append(int(input("Enter Age Limit 18 OR 45 - ")))
+
 findByPinParams = {"pincode": pincode, "date": dateTom}
-list1 = []
-list2 = []
 chromeWindow = gw.getWindowsWithTitle('Co-WIN Application - Google Chrome')[0]
 base_urlFindByPin = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin"
 base_urlFindByDistrict = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict"
@@ -42,7 +45,7 @@ for i in range(5000000):
     getrequest(base_urlFindByPin, findByPinParams, list1, list2)
     # if len(list1) == 0:
     #    print("Not Available, Trying again...")
-    if len(list1) > 0 and list2[0] == 45: # Change Minimum Birthyear Requirement to 18 OR 45
+    if len(list1) > 0 and list2[0] == list3[0]:
         chromeWindow.maximize()  # Opens CO-Win Portal if found any slot available
         break
     else:
