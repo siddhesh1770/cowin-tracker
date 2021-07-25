@@ -5,46 +5,52 @@ Ranjeetsinha Patil and Anupam Patil
 Follow me on Instagram for more programs like this https://www.instagram.com/siddhesh1770/
  """
 import time
-import datetime
+
+import pyautogui
+import pyttsx3
 import requests
-import pygetwindow as gw
-list1 = []
-list2 = []
-list3 = []
-dateTom_base = datetime.date.today() + datetime.timedelta(days=1)
-dateTom = dateTom_base.strftime("%d-%m-%Y")
-print("Welcome to Seventeen Seventy CO-WIN Vaccine Tracker")
-pincode = str(input("Please Enter Your Pincode - "))
-list3.append(int(input("Enter Age Limit 18 OR 45 - ")))
-sec = float(input("Please enter time Interval in seconds (3 is Recommended) But if slot is about to open you can "
-                  "also enter 0.5 OR 1 also - "))
-findByPinParams = {"pincode": pincode, "date": dateTom}
-chromeWindow = gw.getWindowsWithTitle('Co-WIN Application - Google Chrome')[0]
-base_urlFindByPin = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin"
-base_urlFindByDistrict = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict"
 
-def getrequest(x, y, u, v):
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0"}
-    r = requests.get(x, y, headers=headers)
-    statuscode = r.status_code
-    z = r.json()
-    p = r.json()
-    if statuscode == 200:
-        print("Successfully checked")
-    else:
-        print("If this happens a lot please restart program or try again after some time.")
-    for dictionary1 in z['sessions']:
-        u.append(dictionary1['available_capacity'])
-    for dictionary2 in p['sessions']:
-        v.append(dictionary2['min_age_limit'])
-    return u, v
+# Voice Data
+engine = pyttsx3.init('sapi5')
+voices = engine.getProperty('voices')
 
-for i in range(5000000):
-    getrequest(base_urlFindByPin, findByPinParams, list1, list2)
-    if len(list1) > 0 and list2[0] == list3[0]:
-        chromeWindow.maximize()  # Opens CO-Win Portal if found any slot available
+bookBtn = [694, 241]
+found = []
+
+
+def speak(audio):  # Text to Speech Speak
+    engine.setProperty('voice', voices[1].id)
+    engine.say(audio)
+    engine.runAndWait()
+
+
+def bookprocess():
+    time.sleep(0.5)  # Add music
+    pyautogui.click(694, 241)
+    print("Hello World")
+    found.append(45)
+
+
+def searchByPin():
+    baseurlFindByPin = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=410206&date=26-07-2021"
+    h = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0"}
+    r = requests.get(baseurlFindByPin, headers=h)
+    res = r.json()
+    for i in res['sessions']:
+        if int(i['available_capacity_dose2']) > 0:
+            if i['vaccine'] == 'COVISHIELD' and int(i['min_age_limit']) == 18 and i['fee_type'] == 'Free':
+                bookprocess()
+                print(i['vaccine'], " ", i['min_age_limit'], " ", i['fee_type'], " ", i['name'])
+                print("Available Cap = ", i['available_capacity_dose2'])
+        print(i['name'])
+
+
+count = 1
+while (1):
+    print("Count Number = ", count)
+    searchByPin()
+    print("\n")
+    time.sleep(3)
+    if len(found) > 0:
         break
-    else:
-        print("Not available trying again !!!")
-        print("Trial Number = "+str(i + 1))
-    time.sleep(sec)  # Takes pause for 3 seconds
+    count += 1
